@@ -1,27 +1,26 @@
-const { exec } = require("child_process");
-const process = require("process");
+const util = require("util");
+const exec = util.promisify(require("child_process").exec);
 
 const commands = [
-    "widdershins ./api-docs.yaml -o docs.md --summary true --omitHeader true --code true --resolve true",
+    "widdershins ./api-docs.yaml -o ./test/docs.md --summary true --omitHeader true --code true --resolve true",
     "node ./parser/ParseMarkdownByTag.js",
     "node ./parser/RemoveInnerRef.js",
     "node ./md-to-notion/MdToNotionForDir.js",
     "node ./md-to-notion/PostTagOnPage.js",
 ];
 
-function runCommand() {
-    for (i = 0; i < commands.length; i++) {
-        exec(commands[i], (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error: ${error.message}`);
-                return;
-            }
+async function runCommand() {
+    for (const command of commands) {
+        try {
+            const { stdout, stderr } = await exec(command);
+            console.log(stdout);
             if (stderr) {
                 console.error(`Stderr: ${stderr}`);
-                return;
             }
-            console.log(`${stdout}`);
-        });
+        } catch (error) {
+            console.error(`Error executing ${command}: ${error.message}`);
+            break;
+        }
     }
 }
 
