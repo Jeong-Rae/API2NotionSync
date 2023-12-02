@@ -1,13 +1,12 @@
 const { exec } = require("child_process");
 const process = require("process");
 
-process.chdir("test"); // 작업 디렉토리를 'test'로 변경
-
 const commands = [
-    "widdershins ../api-docs.yaml -o docs.md --summary true --omitHeader true --code true --resolve true",
-    "node ../parser/ParseMarkdownByTag.js",
-    "node ../parser/RemoveInnerRef.js",
-    "node ../md-to-notion/convertDir.js",
+    "widdershins ./api-docs.yaml -o docs.md --summary true --omitHeader true --code true --resolve true",
+    "node ./parser/ParseMarkdownByTag.js",
+    "node ./parser/RemoveInnerRef.js",
+    "node ./md-to-notion/MdToNotionForDir.js",
+    "node ./md-to-notion/PostTagOnPage.js",
 ];
 
 function runCommand() {

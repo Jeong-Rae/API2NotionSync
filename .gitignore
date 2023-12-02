@@ -1,2 +1,4 @@
 test\
 temp\
+.env
+trace.error
