@@ -21,17 +21,17 @@ async function logError(error) {
 
     if (error.isAxiosError) {
         errorMessage += `\nAxios Error: ${error.message}`;
-        /*  if (error.config) {
+        /* config는 trace가 과도한 문제 있음 고민 필요
+        if (error.config) {
             errorMessage += `\nConfig: ${JSON.stringify(error.config)}`;
-        } */
+        }
+        */
         if (error.code) {
             errorMessage += `\nCode: ${error.code}`;
         }
-        // 요약된 response 정보만 포함
         if (error.response) {
             errorMessage += `\nResponse Status: ${error.response.status}`;
             errorMessage += `\nResponse Status Text: ${error.response.statusText}`;
-            // 필요한 경우 headers 등 추가 정보 포함
         }
     }
 
