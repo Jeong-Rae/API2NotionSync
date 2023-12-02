@@ -1,11 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 const util = require("util");
-const writeFile = util.promisify(fs.writeFile); // 프로미스 기반 writeFile
-const readFile = util.promisify(fs.readFile); // 프로미스 기반 readFile
-const readdir = util.promisify(fs.readdir); // 프로미스 기반 readdir
 
-const tempDirectory = "../test";
+const writeFile = util.promisify(fs.writeFile);
+const readFile = util.promisify(fs.readFile);
+const readdir = util.promisify(fs.readdir);
+
+const tempDirectory = "./test";
 
 async function removeInnerRef() {
     console.log("== DO REMOVE INNER REF ==");

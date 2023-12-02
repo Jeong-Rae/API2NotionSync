@@ -1,8 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const util = require("util");
-const writeFile = util.promisify(fs.writeFile); // 프로미스 기반 writeFile
-const readFile = util.promisify(fs.readFile); // 프로미스 기반 readFile
+
+const writeFile = util.promisify(fs.writeFile);
+const readFile = util.promisify(fs.readFile);
 
 /* 마크다운 분할 */
 function splitMarkdown(markdown) {
@@ -35,10 +36,10 @@ function extractTitle(line) {
 }
 
 /* 마크다운 파일 저장 */
-async function processMarkdownFile() {
+async function parseMarkdownByTag() {
     console.log("== DO PARSE MARKDOWN BY TAG ==");
     try {
-        const data = await readFile("../test/docs.md", "utf8");
+        const data = await readFile("./test/docs.md", "utf8");
         const sections = splitMarkdown(data);
         let currentTitle = "";
         let sectionCount = 0;
@@ -61,7 +62,7 @@ async function processMarkdownFile() {
                 sectionCount++;
             }
 
-            const fileName = `${currentTitle.replace(
+            const fileName = `./test/${currentTitle.replace(
                 /\s+/g,
                 "-"
             )}-${sectionCount}.md`;
@@ -87,4 +88,4 @@ async function processMarkdownFile() {
     }
 }
 
-processMarkdownFile();
+parseMarkdownByTag();
