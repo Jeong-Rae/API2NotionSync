@@ -15,29 +15,27 @@ async function logError(error) {
     const timestamp = new Date().toISOString();
     let errorMessage = `${timestamp} - ${error.message}`;
 
-    // 스택 추적 추가
     if (error.stack) {
         errorMessage += `\nStack Trace:\n${error.stack}`;
     }
 
-    // Axios 에러의 경우 추가 정보 추가
     if (error.isAxiosError) {
         errorMessage += `\nAxios Error: ${error.message}`;
-        if (error.config) {
+        /*  if (error.config) {
             errorMessage += `\nConfig: ${JSON.stringify(error.config)}`;
-        }
+        } */
         if (error.code) {
             errorMessage += `\nCode: ${error.code}`;
         }
-        if (error.request) {
-            errorMessage += `\nRequest: ${JSON.stringify(error.request)}`;
-        }
+        // 요약된 response 정보만 포함
         if (error.response) {
-            errorMessage += `\nResponse: ${JSON.stringify(error.response)}`;
+            errorMessage += `\nResponse Status: ${error.response.status}`;
+            errorMessage += `\nResponse Status Text: ${error.response.statusText}`;
+            // 필요한 경우 headers 등 추가 정보 포함
         }
     }
 
-    errorMessage += "\n\n"; // 에러 메시지 구분을 위한 줄바꿈
+    errorMessage += "\n\n";
     await appendFile(errorLogFile, errorMessage);
 }
 
