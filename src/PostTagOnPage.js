@@ -9,7 +9,7 @@ const token = "secret_xm5CmdMZQfkW35nk7NA7sy78shS4XewVcLjc6kfmCfG"; // 노션 AP
 const parentPageId = "a79064c764414e4b976be7681ca7af1b"; // 부모 페이지 ID
 
 const tempDirectory = "./test";
-const errorLogFile = "./md-to-notion/trace.error";
+const errorLogFile = "./src/trace.error";
 
 /* 에러 log */
 async function logError(error) {
