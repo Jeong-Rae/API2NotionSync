@@ -5,35 +5,41 @@
 ### 모든 작업을 순차실행
 
 ```shell
-node Run.js
+node ./src/Run.js
+```
+
+### 임시 저장 공간인 test 생성
+
+```
+mkdir test
 ```
 
 ### yaml -> md 변환
 
 ```shell
-widdershins ..\api-docs.yaml -o docs.md --summary true  --omitHeader true --code true --resolve true
+node widdershins ./resource/api-docs.yaml -o ./test/docs.md --summary true  --omitHeader true --code true --resolve true
 ```
 
 ### tag 기준으로 docs.md을 메서드 단위로 분할
 
 ```shell
-node .\parser\ParseMarkdownByTag.js
+node .\src\ParseMarkdownByTag.js
 ```
 
 ### 내부 참조 제거하기
 
 ```shell
-node .\parser\RemoveInnerRef.js
+node .\src\RemoveInnerRef.js
 ```
 
 ### test에 있는 모든 md을 notion식 블록 json으로 변경
 
 ```shell
-node .\md-to-notion\MdToNotionForDir.js
+node .\src\MdToNotionForDir.js
 ```
 
 ### 모든 태그 notion에 post
 
 ```shell
-node .\md-to-notion\PostBatchOnPage.js
+node .\src\PostBatchOnPage.js
 ```
