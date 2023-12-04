@@ -1,0 +1,7 @@
+{
+    "dependencies": {
+        "widdershins": "^4.0.1",
+        "@tryfabric/martian": "^1.2.4",
+        "axios": "^1.6.2"
+    }
+}
