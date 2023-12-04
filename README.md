@@ -5,7 +5,7 @@
 ### 모든 작업을 순차실행
 
 ```shell
-node ./src/Run.js
+node ./Run.js
 ```
 
 ### 임시 저장 공간인 test 생성
