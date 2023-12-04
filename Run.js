@@ -5,7 +5,6 @@ const commands = [
     "node ./src/SaveApiDocs",
     "node ./node_modules/widdershins/widdershins.js ./resource/api-docs.yaml -o ./test/docs.md --summary true  --omitHeader true --code true --resolve true",
     "node ./src/ParseMarkdownByTag.js",
-    "rm ./test/docs.md",
     "node ./src/RemoveInnerRef.js",
     "node ./src/MdToNotionForDir.js",
     "node ./src/PostTagOnPage.js",

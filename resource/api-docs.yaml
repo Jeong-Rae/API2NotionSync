@@ -4,8 +4,8 @@ info:
   description: 세종대 인터페이스 API 정보
   version: 1.0.0
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+- url: https://api.interfacesejong.xyz
+  description: Default Server URL
 security:
 - JWT: []
 tags:

@@ -4,6 +4,7 @@ const util = require("util");
 
 const writeFile = util.promisify(fs.writeFile);
 const readFile = util.promisify(fs.readFile);
+const unlink = util.promisify(fs.unlink);
 
 /* 마크다운 분할 */
 function splitMarkdown(markdown) {
@@ -83,6 +84,8 @@ async function parseMarkdownByTag() {
         // 모든 파일이 저장될 때까지 기다리기
         await Promise.all(writeOperations);
         console.log("== FIN PARSE MARKDOWN BY TAG ==");
+
+        await unlink("./test/docs.md");
     } catch (err) {
         console.error("파일 읽기 중 에러 발생:", err);
     }
