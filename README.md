@@ -17,29 +17,29 @@ mkdir test
 ### yaml -> md 변환
 
 ```shell
-node widdershins ./resource/api-docs.yaml -o ./test/docs.md --summary true  --omitHeader true --code true --resolve true
+node ./node_modules/widdershins/widdershins.js ./resource/api-docs.yaml -o ./test/docs.md --summary true  --omitHeader true --code true --resolve true
 ```
 
 ### tag 기준으로 docs.md을 메서드 단위로 분할
 
 ```shell
-node .\src\ParseMarkdownByTag.js
+node ./src/ParseMarkdownByTag.js
 ```
 
 ### 내부 참조 제거하기
 
 ```shell
-node .\src\RemoveInnerRef.js
+node ./src/RemoveInnerRef.js
 ```
 
 ### test에 있는 모든 md을 notion식 블록 json으로 변경
 
 ```shell
-node .\src\MdToNotionForDir.js
+node ./src/MdToNotionForDir.js
 ```
 
 ### 모든 태그 notion에 post
 
 ```shell
-node .\src\PostBatchOnPage.js
+node ./src/PostBatchOnPage.js
 ```
