@@ -16,6 +16,7 @@ const mdToNotionForDir = require(path
 const postTagOnPage = require(path
     .join(__dirname, "src", "PostTagOnPage"));
 
+
 async function run() {
     await saveApiDocs();
     await convertYamlToMd();
@@ -26,4 +27,4 @@ async function run() {
     //await postTagOnPage();
 }
 
-run();
+module.exports = run;
