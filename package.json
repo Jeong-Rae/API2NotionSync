@@ -1,7 +1,38 @@
 {
     "dependencies": {
-        "widdershins": "^4.0.1",
         "@tryfabric/martian": "^1.2.4",
-        "axios": "^1.6.2"
-    }
+        "axios": "^1.6.2",
+        "widdershins": "^4.0.1"
+    },
+    "name": "api2notionsync",
+    "description": "Automatically synchronizes the `api-docs` in OpenAPI format or swagger to `Notion`",
+    "version": "0.0.3",
+    "main": "Run.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+        "api2notionsync": "./Run.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Jeong-Rae/API2NotionSync.git"
+    },
+    "contributors": [
+        {
+            "name": "Jeong-Rae",
+            "email": "kkwjdfo@gmail.com",
+            "url": "https://github.com/Jeong-Rae"
+        },
+        {
+            "name": "KyuTae98",
+            "email": "rbxo0109@gmail.com",
+            "url": "https://github.com/KyuTae98"
+        }
+    ],
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Jeong-Rae/API2NotionSync/issues"
+    },
+    "homepage": "https://github.com/Jeong-Rae/API2NotionSync#readme"
 }
