@@ -6,6 +6,8 @@ const writeFile = util.promisify(fs.writeFile);
 const readFile = util.promisify(fs.readFile);
 const unlink = util.promisify(fs.unlink);
 
+const docsFile = path.join(__dirname, "../test", "docs.md");
+
 /* 마크다운 분할 */
 function splitMarkdown(markdown) {
     const splitSections = [];
@@ -40,7 +42,7 @@ function extractTitle(line) {
 async function parseMarkdownByTag() {
     console.log("== DO PARSE MARKDOWN BY TAG ==");
     try {
-        const data = await readFile("./test/docs.md", "utf8");
+        const data = await readFile(docsFile, "utf8");
         const sections = splitMarkdown(data);
         let currentTitle = "";
         let sectionCount = 0;
@@ -63,11 +65,11 @@ async function parseMarkdownByTag() {
                 sectionCount++;
             }
 
-            const fileName = `./test/${currentTitle.replace(
+            const fileName = `${currentTitle.replace(
                 /\s+/g,
                 "-"
             )}-${sectionCount}.md`;
-            const filePath = path.join(process.cwd(), fileName);
+            const filePath = path.join(__dirname, "../test", fileName);
 
             // 파일 쓰기 작업을 배열에 추가
             writeOperations.push(
@@ -76,7 +78,7 @@ async function parseMarkdownByTag() {
                         console.log(`저장 성공 : ${fileName}`);
                     })
                     .catch((err) => {
-                        console.error(`저장 실패 : ${fileName} ? `, err);
+                        console.error(`저장 실패 : ${fileName} ->`, err);
                     })
             );
         });
@@ -85,10 +87,10 @@ async function parseMarkdownByTag() {
         await Promise.all(writeOperations);
         console.log("== FIN PARSE MARKDOWN BY TAG ==");
 
-        await unlink("./test/docs.md");
+        await unlink(docsFile);
     } catch (err) {
-        console.error("파일 읽기 중 에러 발생:", err);
+        console.error("파일 읽기 중 에러 발생 ->", err);
     }
 }
 
-parseMarkdownByTag();
+module.exports = parseMarkdownByTag;

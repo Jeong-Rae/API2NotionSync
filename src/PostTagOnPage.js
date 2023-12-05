@@ -8,8 +8,8 @@ const appendFile = util.promisify(fs.appendFile);
 const token = "secret_xm5CmdMZQfkW35nk7NA7sy78shS4XewVcLjc6kfmCfG"; // 노션 API 키
 const parentPageId = "a79064c764414e4b976be7681ca7af1b"; // 부모 페이지 ID
 
-const tempDirectory = "./test";
-const errorLogFile = "./src/trace.error";
+const tempDirectory = path.join(__dirname, "test");
+const errorLogFile = path.join(__dirname, "src", "trace.error");
 
 /* 에러 log */
 async function logError(error) {
@@ -135,7 +135,7 @@ async function postRootPage(tag) {
 }
 
 /* 모든 태그 post */
-async function postAllTags() {
+async function postTagOnPage() {
     console.log("== DO ALL TAGS DOCS POSTING ==");
     const tags = getTags(tempDirectory);
     for (const tag of tags) {
@@ -144,4 +144,4 @@ async function postAllTags() {
     console.log("== FIN POST ALL TAGS DOCS POSTING ==");
 }
 
-postAllTags();
+module.exports = postTagOnPage;

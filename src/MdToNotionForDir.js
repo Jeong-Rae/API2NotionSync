@@ -47,4 +47,4 @@ async function mdToNotionForDir() {
     }
 }
 
-mdToNotionForDir();
+module.exports = mdToNotionForDir;

@@ -39,4 +39,4 @@ async function removeInnerRef() {
     }
 }
 
-removeInnerRef();
+module.exports = removeInnerRef;

@@ -3,7 +3,7 @@ const fs = require("fs");
 const util = require("util");
 const path = require("path");
 
-const writeFile = util.promisify(fs.writeFile); // fs.writeFile 프로미스화
+const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 const exists = util.promisify(fs.exists);
 
@@ -36,4 +36,4 @@ async function saveApiDocs() {
     console.log("== FIN SAVE API-DOCS.YAML ==");
 }
 
-saveApiDocs();
+module.exports = saveApiDocs;
