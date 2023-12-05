@@ -30,8 +30,8 @@ async function saveApiDocs() {
         console.error(`저장 실패 -> : ${error.message}`);
     }
 
-    if (!(await exists("test"))) {
-        await mkdir("test", { recursive: true });
+    if (!(await exists("temp"))) {
+        await mkdir("temp", { recursive: true });
     }
     console.log("== FIN SAVE API-DOCS.YAML ==");
 }

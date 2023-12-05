@@ -8,8 +8,8 @@ const appendFile = util.promisify(fs.appendFile);
 const token = "secret_xm5CmdMZQfkW35nk7NA7sy78shS4XewVcLjc6kfmCfG"; // 노션 API 키
 const parentPageId = "a79064c764414e4b976be7681ca7af1b"; // 부모 페이지 ID
 
-const tempDirectory = path.join(__dirname, "test");
-const errorLogFile = path.join(__dirname, "src", "trace.error");
+const tempPath = path.join(__dirname, "../temp");
+const errorLogFile = path.join(__dirname, "../temp", "trace.error");
 
 /* 에러 log */
 async function logError(error) {
@@ -59,11 +59,11 @@ function getTags(dir) {
 async function postApiDocs(rootPageId, tag) {
     // 'temp'에서 특정 태그로 시작하는 JSON 파일 파일명 가져오기
     const jsonFiles = fs
-        .readdirSync(tempDirectory)
+        .readdirSync(tempPath)
         .filter(
             (file) => file.startsWith(tag) && path.extname(file) === ".json"
         )
-        .map((file) => path.join(tempDirectory, file));
+        .map((file) => path.join(tempPath, file));
 
     // 각 JSON 파일의 내용을 루트 페이지에 추가
     for (const file of jsonFiles) {
@@ -137,7 +137,7 @@ async function postRootPage(tag) {
 /* 모든 태그 post */
 async function postTagOnPage() {
     console.log("== DO ALL TAGS DOCS POSTING ==");
-    const tags = getTags(tempDirectory);
+    const tags = getTags(tempPath);
     for (const tag of tags) {
         await postRootPage(tag);
     }

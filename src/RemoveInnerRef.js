@@ -6,16 +6,16 @@ const writeFile = util.promisify(fs.writeFile);
 const readFile = util.promisify(fs.readFile);
 const readdir = util.promisify(fs.readdir);
 
-const tempDirectory = "./test";
+const tempPath = path.join(__dirname, "../temp");
 
 async function removeInnerRef() {
     console.log("== DO REMOVE INNER REF ==");
     try {
-        const files = await readdir(tempDirectory);
+        const files = await readdir(tempPath);
 
         const writeOperations = files.map(async (file) => {
             if (path.extname(file) === ".md") {
-                const filePath = path.join(tempDirectory, file);
+                const filePath = path.join(tempPath, file);
                 const data = await readFile(filePath, "utf8");
 
                 // 내부 참조 링크 제거
@@ -25,7 +25,7 @@ async function removeInnerRef() {
                 );
 
                 // 결과를 같은 이름의 파일로 저장
-                const newFilePath = path.join(tempDirectory, `${file}`);
+                const newFilePath = path.join(tempPath, `${file}`);
                 await writeFile(newFilePath, updatedMarkdown, "utf8");
                 console.log(`참조 제거 : ${file}`);
             }

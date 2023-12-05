@@ -6,7 +6,7 @@ const writeFile = util.promisify(fs.writeFile);
 const readFile = util.promisify(fs.readFile);
 const unlink = util.promisify(fs.unlink);
 
-const docsFile = path.join(__dirname, "../test", "docs.md");
+const docsFile = path.join(__dirname, "../temp", "summary.md");
 
 /* 마크다운 분할 */
 function splitMarkdown(markdown) {
@@ -69,7 +69,7 @@ async function parseMarkdownByTag() {
                 /\s+/g,
                 "-"
             )}-${sectionCount}.md`;
-            const filePath = path.join(__dirname, "../test", fileName);
+            const filePath = path.join(__dirname, "../temp", fileName);
 
             // 파일 쓰기 작업을 배열에 추가
             writeOperations.push(

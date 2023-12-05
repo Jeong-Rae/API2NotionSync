@@ -1,28 +1,29 @@
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
+#!/usr/bin/env node
 
-const commands = [
-    "node ./src/SaveApiDocs",
-    "node ./node_modules/widdershins/widdershins.js ./resource/api-docs.yaml -o ./test/docs.md --summary true  --omitHeader true --code true --resolve true",
-    "node ./src/ParseMarkdownByTag.js",
-    "node ./src/RemoveInnerRef.js",
-    "node ./src/MdToNotionForDir.js",
-    "node ./src/PostTagOnPage.js",
-];
+const path = require('path');
+const saveApiDocs = require(path
+    .join(__dirname, "src", "SaveApiDocs"));
+const convertYamlToMd = require(path
+    .join(__dirname, "src", "ConvertYamlToMd"));
+const extractSchema = require(path
+    .join(__dirname, "src", "ExtractSchema"));
+const parseMarkdownByTag = require(path
+    .join(__dirname, "src", "ParseMarkdownByTag"));
+const removeInnerRef = require(path
+    .join(__dirname, "src", "RemoveInnerRef"));
+const mdToNotionForDir = require(path
+    .join(__dirname, "src", "MdToNotionForDir"));
+const postTagOnPage = require(path
+    .join(__dirname, "src", "PostTagOnPage"));
 
-async function runCommand() {
-    for (const command of commands) {
-        try {
-            const { stdout, stderr } = await exec(command);
-            console.log(stdout);
-            if (stderr) {
-                console.error(`Stderr: ${stderr}`);
-            }
-        } catch (error) {
-            console.error(`Error executing ${command}: ${error.message}`);
-            break;
-        }
-    }
+async function run() {
+    await saveApiDocs();
+    await convertYamlToMd();
+    await extractSchema();
+    await parseMarkdownByTag();
+    await removeInnerRef();
+    await mdToNotionForDir();
+    //await postTagOnPage();
 }
 
-runCommand();
+run();

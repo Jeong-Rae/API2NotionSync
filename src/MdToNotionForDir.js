@@ -8,15 +8,15 @@ const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const unlink = util.promisify(fs.unlink);
 
-const tempDirectory = "./test";
+const tempPath = path.join(__dirname, "../temp");
 
 async function mdToNotionForDir() {
     try {
-        const files = await readdir(tempDirectory);
+        const files = await readdir(tempPath);
 
         const operations = files.map(async (file) => {
-            if (path.extname(file) === ".md") {
-                const filePath = path.join(tempDirectory, file);
+            if (path.extname(file) === ".md" && file !== "schema.md") {
+                const filePath = path.join(tempPath, file);
                 const markdown = await readFile(filePath, "utf8");
 
                 // Notion 블록 객체로 변경
@@ -24,7 +24,7 @@ async function mdToNotionForDir() {
 
                 // JSON 파일 저장
                 const jsonFileName = path.basename(file, ".md") + ".json";
-                const jsonFilePath = path.join(tempDirectory, jsonFileName);
+                const jsonFilePath = path.join(tempPath, jsonFileName);
 
                 await writeFile(
                     jsonFilePath,
