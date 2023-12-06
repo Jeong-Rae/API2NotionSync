@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const path = require('path');
 const saveApiDocs = require(path
     .join(__dirname, "src", "SaveApiDocs"));
@@ -17,14 +15,17 @@ const postTagOnPage = require(path
     .join(__dirname, "src", "PostTagOnPage"));
 
 
-async function run() {
+async function run(isMarkdownOnly) {
     await saveApiDocs();
     await convertYamlToMd();
+    if (isMarkdownOnly) {
+        return;
+    }
     await extractSchema();
     await parseMarkdownByTag();
     await removeInnerRef();
     await mdToNotionForDir();
-    //await postTagOnPage();
+    await postTagOnPage();
 }
 
 module.exports = run;

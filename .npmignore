@@ -4,3 +4,5 @@ test
 trace.error
 .env
 .vscode
+.temp
+temp

@@ -5,8 +5,10 @@ const util = require("util");
 
 const appendFile = util.promisify(fs.appendFile);
 
-const token = "secret_xm5CmdMZQfkW35nk7NA7sy78shS4XewVcLjc6kfmCfG"; // 노션 API 키
-const parentPageId = "a79064c764414e4b976be7681ca7af1b"; // 부모 페이지 ID
+//const token = "secret_xm5CmdMZQfkW35nk7NA7sy78shS4XewVcLjc6kfmCfG"; // 노션 API 키
+const token = process.env.NOTION_API_KEY; // 노션 API 키
+//const parentPageId = "a79064c764414e4b976be7681ca7af1b"; // 부모 페이지 ID
+const parentPageId = process.env.NOTION_PAGE_ID; // 부모 페이지 ID
 
 const tempPath = path.join(__dirname, "../temp");
 const errorLogFile = path.join(__dirname, "../temp", "trace.error");

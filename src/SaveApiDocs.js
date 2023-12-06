@@ -11,6 +11,8 @@ const host = "https://api.interfacesejong.xyz/";
 const url = host + "v3/api-docs.yaml";
 const filePath = path.join(__dirname, "../resource", "api-docs.yaml");
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 async function saveApiDocs() {
     try {
         const dirPath = path.dirname(filePath);
@@ -21,17 +23,33 @@ async function saveApiDocs() {
             await mkdir(dirPath, { recursive: true });
         }
 
-        const response = await axios.get(url, { responseType: "arraybuffer" });
+        //GET 요청 10초간격 최대 10번 실행
+        let response;
+        for (let attempt = 0; attempt < 10; attempt++) {
+            try {
+                response = await axios.get(url, { responseType: "arraybuffer" });
+                break;
+            } catch (error) {
+                console.error(`저장 실패 ${attempt + 1}번) -> : ${error.message}`);
+                if (attempt < 9) await delay(10000);
+            }
+        }
+
+        if (!response) {
+            throw new Error("GET 10번 실패");
+        }
 
         // 파일 저장
         await writeFile(filePath, response.data, "utf8");
         console.log(`저장 완료: ${filePath}`);
     } catch (error) {
         console.error(`저장 실패 -> : ${error.message}`);
+
+        
     }
 
-    if (!(await exists("temp"))) {
-        await mkdir("temp", { recursive: true });
+    if (!(await exists(path.join(__dirname, "../temp")))) {
+        await mkdir(path.join(__dirname, "../temp"), { recursive: true });
     }
     console.log("== FIN SAVE API-DOCS.YAML ==");
 }

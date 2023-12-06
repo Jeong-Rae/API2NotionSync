@@ -1,6 +1,10 @@
-let argv = {
+#!/usr/bin/env node
+const path = require('path');
+const run = require(path.join(__dirname, "Run"));
+
+var argv = {
     run: false,
-    libVersion: false,
+    libVersion: [false, "api2notionsync v0.1.3"],
     help: false,
     markdown: false,
     oasVersion: 3,
@@ -8,12 +12,8 @@ let argv = {
     unknown: [],
 };
 
-function run() {
-    console.log("run() 함수 실행");
-}
-
-function getMd() {
-    console.log("getMd() 함수 실행");
+function runAPI2NotionSync(argv) {
+    run(argv.markdown);
 }
 
 function helpTemplate(summary, description, range) {
@@ -23,13 +23,21 @@ function helpTemplate(summary, description, range) {
 function help() {
     console.log("api2notionsync [options] [[-i] input .yaml] <command>\n");
     console.log("usage commands: ");
-    console.log(helpTemplate("[ --run | -r ]", "post docs", 16));
-    console.log(helpTemplate("[ --help | -h ]", "print help", 16));
-    console.log(helpTemplate("[ --version | -v ]", "print library version", 16));
+    console.log(helpTemplate("[ --run | -r ]", "Posts the API document to Notion", 16));
+    console.log(helpTemplate("[ --help | -h ]", "Prints the help document", 16));
+    console.log(
+        helpTemplate("[ --version | -v ]", "Prints the library version", 16)
+    );
     console.log("\nusage options: ");
-    console.log(helpTemplate("[ --markdown | -m ] [Boolean]", "not post, only get docs.md", 32));
-    console.log(helpTemplate("[ --input | -i ] [FilePath]", "set yaml path ", 32));
-    console.log(helpTemplate("[ --oas_version | -s ] [number]", "set OAS version", 32));
+    console.log(
+        helpTemplate("[ --markdown | -m ] [Boolean]", "Obtains only the docs.md file as a result", 32)
+    );
+    console.log(
+        helpTemplate("[ --input | -i ] [FilePath]", "Sets the path of the yaml", 32)
+    );
+    console.log(
+        helpTemplate("[ --oas_version | -s ] [number]", "Sets the version of OAS", 32)
+    );
 }
 
 function parseArguments(args) {
@@ -41,7 +49,7 @@ function parseArguments(args) {
                 break;
             case "--version":
             case "-v":
-                argv.libVersion = true;
+                argv.libVersion[0] = true;
                 break;
             case "--markdown":
             case "-m":
@@ -65,6 +73,14 @@ function parseArguments(args) {
             case "-h":
                 argv.help = true;
                 break;
+            case "--NOTION_API_KEY":
+                process.env.NOTION_API_KEY = args[++i];
+                console.log(process.env.NOTION_API_KEY);
+                break;
+            case "--NOTION_PAGE_ID":
+                process.env.NOTION_PAGE_ID = args[++i];
+                console.log(process.env.NOTION_PAGE_ID);
+                break;
             default:
                 argv.unknown.push(args[i]);
                 break;
@@ -81,6 +97,8 @@ function checkValid(argv) {
             "--oas_version",
             "--input",
             "--help",
+            "--NOTION_API_KEY",
+            "--NOTION_PAGE_ID"
         ];
 
         console.log("Invalid Arguments: " + argv.unknown.join(", "));
@@ -90,9 +108,12 @@ function checkValid(argv) {
                 let mostSimilar = validArgs.reduce((a, b) =>
                     similarity(arg, a) > similarity(arg, b) ? a : b
                 );
-				if ((arg.length - editDistance(arg, mostSimilar)) / arg.length > 0.6) {
-					console.log(`maybe use "${mostSimilar}"?`);
-				}
+                if (
+                    (arg.length - editDistance(arg, mostSimilar)) / arg.length >
+                    0.6
+                ) {
+                    console.log(`Hint? "${mostSimilar}"`);
+                }
             }
         });
 
@@ -112,7 +133,7 @@ function checkValid(argv) {
         actionCount++;
         actionArgs.push("--run");
     }
-    if (argv.libVersion) {
+    if (argv.libVersion[0]) {
         actionCount++;
         actionArgs.push("--version");
     }
@@ -170,13 +191,16 @@ function editDistance(s1, s2) {
     return costs[s2.length];
 }
 
-const args = process.argv.slice(2);
-parseArguments(args);
-checkValid(argv);
+function api2notionsync(args, argv) {
+    parseArguments(args);
+    checkValid(argv);
+    if (argv.run) runAPI2NotionSync(argv);
+    if (argv.libVersion[0]) console.log(argv.libVersion[1]);
+    if (argv.help) help();
 
-if (argv.run) run();
-if (argv.libVersion) console.log("라이브러리 버전: " + argv.oasVersion);
-if (argv.help) help();
-if (argv.markdown) getMd();
-if (argv.oasVersion !== 3) console.log("OAS 버전: " + argv.oasVersion);
-if (argv.input !== "./resource") console.log("입력 경로: " + argv.input);
+    if (argv.oasVersion !== 3) console.log("OAS 버전: " + argv.oasVersion);
+    if (argv.input !== "./resource") console.log("입력 경로: " + argv.input);
+}
+
+const args = process.argv.slice(2);
+api2notionsync(args, argv);
