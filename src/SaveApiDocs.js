@@ -6,14 +6,23 @@ const path = require("path");
 const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 const exists = util.promisify(fs.exists);
+const copyFile = util.promisify(fs.copyFile);
 
-const host = "https://api.interfacesejong.xyz/";
-const url = host + "v3/api-docs.yaml";
 const filePath = path.join(__dirname, "../resource", "api-docs.yaml");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-async function saveApiDocs() {
+async function saveApiDocs(SERVER_HOST, pathInput) {
+    if (pathInput !== "") {
+        try {
+            await copyFile(pathInput, filePath);
+        } catch (err) {
+            console.error("error occurred -> ", err);
+        }
+        return;
+    }
+    const url = SERVER_HOST + "v3/api-docs.yaml";
+
     try {
         const dirPath = path.dirname(filePath);
 
@@ -25,33 +34,31 @@ async function saveApiDocs() {
 
         //GET 요청 10초간격 최대 10번 실행
         let response;
-        for (let attempt = 0; attempt < 10; attempt++) {
+        for (let t = 0; t < 10; t++) {
             try {
                 response = await axios.get(url, { responseType: "arraybuffer" });
                 break;
-            } catch (error) {
-                console.error(`저장 실패 ${attempt + 1}번) -> : ${error.message}`);
-                if (attempt < 9) await delay(10000);
+            } catch (err) {
+                console.error(`저장 대기 ${t + 1}번) -> : ${err.message}`);
+                if (t < 9) await delay(10000);
             }
         }
 
         if (!response) {
-            throw new Error("GET 10번 실패");
+            throw new Error("save docs fail");
         }
 
         // 파일 저장
         await writeFile(filePath, response.data, "utf8");
         console.log(`저장 완료: ${filePath}`);
-    } catch (error) {
-        console.error(`저장 실패 -> : ${error.message}`);
-
-        
+    } catch (err) {
+        console.error("err occurred -> ", err);
     }
 
     if (!(await exists(path.join(__dirname, "../temp")))) {
         await mkdir(path.join(__dirname, "../temp"), { recursive: true });
     }
-    console.log("== FIN SAVE API-DOCS.YAML ==");
+    console.log("== END SAVE API-DOCS.YAML ==");
 }
 
 module.exports = saveApiDocs;

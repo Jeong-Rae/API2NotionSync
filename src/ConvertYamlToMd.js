@@ -17,13 +17,13 @@ const command = [
 
 function convertYamlToMd() {
     try {
-        console.log("== DO CONVERT API-DOCS.YAML TO DOCS.MD ==");
+        console.log("== START CONVERT API-DOCS.YAML TO DOCS.MD ==");
 
         execSync(command);
 
-        console.log("== FIN CONVERT API-DOCS.YAML TO DOCS.MD ==");
-    } catch (error) {
-        console.error(`실행 중 오류 발생 -> ${error}`);
+        console.log("== END CONVERT API-DOCS.YAML TO DOCS.MD ==");
+    } catch (err) {
+        console.error("err occurred -> ", err);
     }
 }
 

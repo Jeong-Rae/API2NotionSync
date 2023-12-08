@@ -5,11 +5,6 @@ const util = require("util");
 
 const appendFile = util.promisify(fs.appendFile);
 
-//const token = "secret_xm5CmdMZQfkW35nk7NA7sy78shS4XewVcLjc6kfmCfG"; // 노션 API 키
-const token = process.env.NOTION_API_KEY; // 노션 API 키
-//const parentPageId = "a79064c764414e4b976be7681ca7af1b"; // 부모 페이지 ID
-const parentPageId = process.env.NOTION_PAGE_ID; // 부모 페이지 ID
-
 const tempPath = path.join(__dirname, "../temp");
 const errorLogFile = path.join(__dirname, "../temp", "trace.error");
 
@@ -46,19 +41,21 @@ async function logError(error) {
 function getTags(dir) {
     const tags = new Set();
     const files = fs.readdirSync(dir);
+
     files.forEach((file) => {
         if (path.extname(file) === ".json") {
             const tag = file.split("-")[0];
-            if (tag !== "") {
+            if (tag !== "" && tag !== "Header") {
                 tags.add(tag);
             }
         }
     });
+
     return Array.from(tags);
 }
 
 /* Tag로 시작하는 모든 APi문서를 rootPage에 post */
-async function postApiDocs(rootPageId, tag) {
+async function postApiDocs(tag, rootPageId, NOTION_API_KEY) {
     // 'temp'에서 특정 태그로 시작하는 JSON 파일 파일명 가져오기
     const jsonFiles = fs
         .readdirSync(tempPath)
@@ -77,25 +74,25 @@ async function postApiDocs(rootPageId, tag) {
                 { children: fileData },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${NOTION_API_KEY}`,
                         "Notion-Version": "2022-06-28",
                         "Content-Type": "application/json",
                     },
                 }
             );
             console.log(`추가 성공 : ${path.basename(file)}`);
-        } catch (error) {
+        } catch (err) {
             console.error(`추가 실패 : ${path.basename(file)}`);
-            logError(error);
+            logError(err);
         }
     }
 }
 
 /* 루트 페이지를 post */
-async function postRootPage(tag) {
+async function postRootPage(tag, NOTION_API_KEY, NOTION_PAGE_ID) {
     // 루트 페이지 생성
     const rootPageData = {
-        parent: { page_id: parentPageId },
+        parent: { page_id: NOTION_PAGE_ID },
         properties: {
             title: {
                 title: [
@@ -117,7 +114,7 @@ async function postRootPage(tag) {
             rootPageData,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${NOTION_API_KEY}`,
                     "Notion-Version": "2022-06-28",
                     "Content-Type": "application/json",
                 },
@@ -127,23 +124,26 @@ async function postRootPage(tag) {
         // 생성된 루트 페이지 Id 저장해서 내용 추가할 경로로 지정
         rootPageId = rootResponse.data.id;
         console.log(`생성 성공 : '${tag}' Root`);
-    } catch (error) {
+    } catch (err) {
         console.error(`생성 실패 : '${tag}'`);
-        logError(error);
+        logError(err);
         return;
     }
 
-    postApiDocs(rootPageId, tag);
+    postApiDocs(tag, rootPageId, NOTION_API_KEY);
 }
 
 /* 모든 태그 post */
-async function postTagOnPage() {
-    console.log("== DO ALL TAGS DOCS POSTING ==");
+async function postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID) {
+    console.log("== START ALL TAGS DOCS POSTING ==");
+
     const tags = getTags(tempPath);
+    await postApiDocs(NOTION_PAGE_ID, "Header"); // Header.json은 메인에 post
+
     for (const tag of tags) {
-        await postRootPage(tag);
+        await postRootPage(tag, NOTION_API_KEY, NOTION_PAGE_ID);
     }
-    console.log("== FIN POST ALL TAGS DOCS POSTING ==");
+    console.log("== END POST ALL TAGS DOCS POSTING ==");
 }
 
 module.exports = postTagOnPage;

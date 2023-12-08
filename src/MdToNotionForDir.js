@@ -41,9 +41,9 @@ async function mdToNotionForDir() {
 
         // 저장 완료 대기
         await Promise.all(operations);
-        console.log("== FIN CONVERT DIR ==");
+        console.log("== END CONVERT DIR ==");
     } catch (err) {
-        console.error("오류 발생:", err);
+        console.error("err occurred -> ", err);
     }
 }
 

@@ -38,6 +38,14 @@ function extractTitle(line) {
     return matches ? matches[1] : null;
 }
 
+/* 파일명 생성 */
+function generateFileName(currentTitle, sectionCount, isHeader) {
+    if (isHeader) {
+        return `${"Header".replace(/\s+/g, "-")}-${sectionCount}.md`;
+    }
+    return `${currentTitle.replace(/\s+/g, "-")}-${sectionCount}.md`;
+}
+
 /* 마크다운 파일 저장 */
 async function parseMarkdownByTag() {
     console.log("== DO PARSE MARKDOWN BY TAG ==");
@@ -46,6 +54,7 @@ async function parseMarkdownByTag() {
         const sections = splitMarkdown(data);
         let currentTitle = "";
         let sectionCount = 0;
+        let isHeader = 2;
         const writeOperations = [];
 
         sections.forEach((section) => {
@@ -65,10 +74,10 @@ async function parseMarkdownByTag() {
                 sectionCount++;
             }
 
-            const fileName = `${currentTitle.replace(
-                /\s+/g,
-                "-"
-            )}-${sectionCount}.md`;
+            const fileName = generateFileName(currentTitle, sectionCount, isHeader);
+            if (isHeader){
+                isHeader--;
+            }
             const filePath = path.join(__dirname, "../temp", fileName);
 
             // 파일 쓰기 작업을 배열에 추가

@@ -11,7 +11,7 @@ const summaryFile = path.join(__dirname, "../temp", "summary.md");
 const schemaFile = path.join(__dirname, "../temp", "schema.md");
 
 async function extractSchema() {
-    console.log("== DO EXTRACT SCHEMA ==");
+    console.log("== START EXTRACT SCHEMA ==");
 
     try {
         const data = await readFile(docsFile, "utf8");
@@ -27,12 +27,12 @@ async function extractSchema() {
             console.log("저장 성공 : schema.md");
         }
 
-        console.log("== FIN EXTRACT SCHEMA ==");
+        console.log("== END EXTRACT SCHEMA ==");
 
         // 사용한 docs.md 삭제
         await unlink(docsFile);
     } catch (err) {
-        console.error("파일 처리 중 에러 발생 ->", err);
+        console.error("err occurred -> ", err);
     }
 }
 

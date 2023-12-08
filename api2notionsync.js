@@ -8,12 +8,12 @@ var argv = {
     help: false,
     markdown: false,
     oasVersion: 3,
-    input: "./resource",
+    input: "",
     unknown: [],
 };
 
 function runAPI2NotionSync(argv) {
-    run(argv.markdown);
+    run(argv.markdown, argv.input);
 }
 
 function helpTemplate(summary, description, range) {
@@ -33,7 +33,7 @@ function help() {
         helpTemplate("[ --markdown | -m ] [Boolean]", "Obtains only the docs.md file as a result", 32)
     );
     console.log(
-        helpTemplate("[ --input | -i ] [FilePath]", "Sets the path of the yaml", 32)
+        helpTemplate("[ --input | -i ] [FilePath]", "Sets the absolute path of the yaml", 32)
     );
     console.log(
         helpTemplate("[ --oas_version | -s ] [number]", "Sets the version of OAS", 32)
@@ -74,12 +74,21 @@ function parseArguments(args) {
                 argv.help = true;
                 break;
             case "--NOTION_API_KEY":
-                process.env.NOTION_API_KEY = args[++i];
-                console.log(process.env.NOTION_API_KEY);
+                if (i + 1 < args.length) {
+                    process.env.NOTION_API_KEY = args[++i];
+                    console.log(process.env.NOTION_API_KEY);
+                }
                 break;
             case "--NOTION_PAGE_ID":
-                process.env.NOTION_PAGE_ID = args[++i];
-                console.log(process.env.NOTION_PAGE_ID);
+                if (i + 1 < args.length) {
+                    process.env.NOTION_PAGE_ID = args[++i];
+                    console.log(process.env.NOTION_PAGE_ID);
+                }
+                break;
+            case "--host":
+                if (i + 1 < args.length) {
+                    process.env.SERVER_HOST = args[++i];
+                }
                 break;
             default:
                 argv.unknown.push(args[i]);
@@ -97,6 +106,7 @@ function checkValid(argv) {
             "--oas_version",
             "--input",
             "--help",
+            "--host",
             "--NOTION_API_KEY",
             "--NOTION_PAGE_ID"
         ];
@@ -112,7 +122,7 @@ function checkValid(argv) {
                     (arg.length - editDistance(arg, mostSimilar)) / arg.length >
                     0.6
                 ) {
-                    console.log(`Hint? "${mostSimilar}"`);
+                    console.log(`The most similar command  '"${mostSimilar}"'`);
                 }
             }
         });
