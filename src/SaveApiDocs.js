@@ -21,7 +21,7 @@ async function saveApiDocs(SERVER_HOST, pathInput) {
         }
         return;
     }
-    const url = SERVER_HOST + "v3/api-docs.yaml";
+    const url = SERVER_HOST + "/v3/api-docs.yaml";
 
     try {
         const dirPath = path.dirname(filePath);
@@ -39,7 +39,7 @@ async function saveApiDocs(SERVER_HOST, pathInput) {
                 response = await axios.get(url, { responseType: "arraybuffer" });
                 break;
             } catch (err) {
-                console.error(`저장 대기 ${t + 1}번) -> : ${err.message}`);
+                console.error(`저장 대기 ${t + 1}회 ->`, err.message);
                 if (t < 9) await delay(10000);
             }
         }
