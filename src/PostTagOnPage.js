@@ -6,7 +6,15 @@ const util = require("util");
 const appendFile = util.promisify(fs.appendFile);
 
 const tempPath = path.join(__dirname, "../temp");
-const errorLogFile = path.join(__dirname, "../temp", "trace.error");
+const errorLog = path.join(__dirname, "../log", "trace.error");
+
+const ANSIEscapeCode = {
+    cover: "\x1b[A",
+    reset: "\x1b[0m",
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    white: "\x1b[37m",
+};
 
 /* 에러 log */
 async function logError(error) {
@@ -34,7 +42,7 @@ async function logError(error) {
     }
 
     errorMessage += "\n\n";
-    await appendFile(errorLogFile, errorMessage);
+    await appendFile(errorLog, errorMessage);
 }
 
 /*  태그 목록 가져오기 */
@@ -64,6 +72,11 @@ async function postApiDocs(tag, rootPageId, NOTION_API_KEY) {
         )
         .map((file) => path.join(tempPath, file));
 
+    const fileCount = jsonFiles.length;
+    let postCount = 0;
+    let progress = `${ANSIEscapeCode.white}=> ${ANSIEscapeCode.reset}`;
+    console.log(`${ANSIEscapeCode.reset}[ ${postCount} / ${fileCount} ] ${progress}`);
+
     // 각 JSON 파일의 내용을 루트 페이지에 추가
     for (const file of jsonFiles) {
         const fileData = JSON.parse(fs.readFileSync(file, "utf-8"));
@@ -80,12 +93,17 @@ async function postApiDocs(tag, rootPageId, NOTION_API_KEY) {
                     },
                 }
             );
-            console.log(`추가 성공 : ${path.basename(file)}`);
+            progress += `${ANSIEscapeCode.green}■`;
         } catch (err) {
-            console.error(`추가 실패 : ${path.basename(file)}`);
+            progress += `${ANSIEscapeCode.red}■`;
             logError(err);
         }
+        postCount++;
+        process.stdout.write(ANSIEscapeCode.cover);
+        console.log(`${ANSIEscapeCode.reset}[ ${postCount} / ${fileCount} ] ${progress}`);
+        console.log(ANSIEscapeCode.reset);
     }
+    console.log(ANSIEscapeCode.reset);
 }
 
 /* 루트 페이지를 post */
@@ -123,14 +141,14 @@ async function postRootPage(tag, NOTION_API_KEY, NOTION_PAGE_ID) {
 
         // 생성된 루트 페이지 Id 저장해서 내용 추가할 경로로 지정
         rootPageId = rootResponse.data.id;
-        console.log(`생성 성공 : '${tag}' Root`);
+        console.log(`[ ${tag} ]`);
     } catch (err) {
-        console.error(`생성 실패 : '${tag}'`);
+        console.log(`${ANSIEscapeCode.red} FAIL ${ANSIEscapeCode.reset}[ ${tag}' Root ]`);
         logError(err);
         return;
     }
 
-    postApiDocs(tag, rootPageId, NOTION_API_KEY);
+    await postApiDocs(tag, rootPageId, NOTION_API_KEY);
 }
 
 /* 모든 태그 post */
@@ -138,12 +156,15 @@ async function postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID) {
     console.log("== START ALL TAGS DOCS POSTING ==");
 
     const tags = getTags(tempPath);
-    await postApiDocs(NOTION_PAGE_ID, "Header"); // Header.json은 메인에 post
+    console.log("[ Header ]");
+    await postApiDocs("Header", NOTION_PAGE_ID, NOTION_API_KEY); // Header.json은 메인에 post
 
     for (const tag of tags) {
         await postRootPage(tag, NOTION_API_KEY, NOTION_PAGE_ID);
     }
     console.log("== END POST ALL TAGS DOCS POSTING ==");
+
+    fs.rm(tempPath, { recursive: true });
 }
 
 module.exports = postTagOnPage;
