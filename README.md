@@ -51,6 +51,12 @@ your server code
 // append command
 api2notionsync.run();
 ```
+다음 방식으로 호출시에 전달될 인자를 선택적으로 결정할 수 있습니다.
+```js
+api2notionsync.run({ isMarkdownOnly: true, pathInput: "./your/path" });
+
+api2notionsync.run({ pathInput: "./your/path" });
+```
 ### 환경변수 .env 등록 사항
 
 `.env`에 notion에 등록되기 위한 api관련 정보와, api문서가 등록되어 있는 server host를 등록해두어야 합니다.
