@@ -6,8 +6,8 @@
     },
     "name": "api2notionsync",
     "description": "Automatically synchronizes the `api-docs` in OpenAPI format or swagger to `Notion`",
-    "version": "0.1.5",
-    "main": "./api2notionsync.js",
+    "version": "0.1.6",
+    "main": "./Run.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "api2notionsync": "api2notionsync"

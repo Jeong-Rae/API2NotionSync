@@ -21,7 +21,7 @@ const NOTION_PAGE_ID = process.env.NOTION_PAGE_ID; // 부모 페이지 ID
 const SERVER_HOST = process.env.SERVER_HOST; // 연동할 서버 주소
 
 
-async function run(isMarkdownOnly, pathInput) {
+async function run({ isMarkdownOnly = false, pathInput = "" } = {}) {
     await saveApiDocs(SERVER_HOST, pathInput);
     await convertYamlToMd();
     if (isMarkdownOnly) {
@@ -32,7 +32,8 @@ async function run(isMarkdownOnly, pathInput) {
     await updateMarkdownStyles();
     await mdToNotionForDir();
     await postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID);
-    fs
 }
 
-module.exports = run;
+module.exports = {
+    run
+};

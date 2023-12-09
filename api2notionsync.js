@@ -14,7 +14,7 @@ var argv = { // 입력인자
 
 /* 실행 함수 호출 */
 function runAPI2NotionSync(argv) {
-    run(argv.markdown, argv.input);
+    run.run(argv.markdown, argv.input);
 }
 
 /* 도움말 출력 */
