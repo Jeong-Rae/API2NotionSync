@@ -35,5 +35,5 @@ async function run({ isMarkdownOnly = false, pathInput = "" } = {}) {
 }
 
 module.exports = {
-    run
+    run,
 };

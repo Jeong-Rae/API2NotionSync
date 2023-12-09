@@ -8,6 +8,22 @@ const unlink = util.promisify(fs.unlink);
 
 const docsFile = path.join(__dirname, "../temp", "summary.md");
 
+const ANSIEscapeCode = {
+    cover: "\x1b[A",
+    reset: "\x1b[0m",
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    blue: "\x1b[34m",
+    white: "\x1b[37m",
+    bgRed: "\x1b[41m",
+    bgGreen: "\x1b[42m",
+};
+
+const progress = {
+    gauge : 0,
+    full : 0,
+}
+
 /* 마크다운 분할 */
 function splitMarkdown(markdown) {
     const splitSections = [];
@@ -48,7 +64,8 @@ function generateFileName(currentTitle, sectionCount, isHeader) {
 
 /* 마크다운 파일 저장 */
 async function parseMarkdownByTag() {
-    console.log("== DO PARSE MARKDOWN BY TAG ==");
+    console.log(`\n${ANSIEscapeCode.blue}== START PARSE MARKDOWN BY TAG ==${ANSIEscapeCode.reset}`);
+    console.log();
     try {
         const data = await readFile(docsFile, "utf8");
         const sections = splitMarkdown(data);
@@ -56,6 +73,8 @@ async function parseMarkdownByTag() {
         let sectionCount = 0;
         let isHeader = 2;
         const writeOperations = [];
+
+        progress.full = sections.length;
 
         sections.forEach((section) => {
             const lines = section.split("\n");
@@ -84,17 +103,19 @@ async function parseMarkdownByTag() {
             writeOperations.push(
                 writeFile(filePath, section, "utf8")
                     .then(() => {
-                        console.log(`저장 성공 : ${fileName}`);
+                        progress.gauge += 1;
+                        process.stdout.write(`${ANSIEscapeCode.cover}`);
+                        console.log(`진행도 [ ${Math.round(progress.gauge / progress.full * 100)} % ] ${ANSIEscapeCode.green}${"▤▤".repeat(Math.floor(progress.gauge / progress.full * 10))}${ANSIEscapeCode.reset}`)
                     })
                     .catch((err) => {
-                        console.error(`저장 실패 : ${fileName} ->`, err);
+                        fs.appendFile(path.join(__dirname, "../log/trace.error"), `저장 실패 -> ${err}`);
                     })
             );
         });
 
         // 모든 파일이 저장될 때까지 기다리기
         await Promise.all(writeOperations);
-        console.log("== FIN PARSE MARKDOWN BY TAG ==");
+        console.log(`${ANSIEscapeCode.blue}== FIN PARSE MARKDOWN BY TAG ==${ANSIEscapeCode.reset}`);
 
         await unlink(docsFile);
     } catch (err) {

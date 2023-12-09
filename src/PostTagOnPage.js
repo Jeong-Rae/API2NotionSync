@@ -13,7 +13,10 @@ const ANSIEscapeCode = {
     reset: "\x1b[0m",
     red: "\x1b[31m",
     green: "\x1b[32m",
+    blue: "\x1b[34m",
     white: "\x1b[37m",
+    bgRed: "\x1b[41m",
+    bgGreen: "\x1b[42m",
 };
 
 /* 에러 log */
@@ -93,15 +96,14 @@ async function postApiDocs(tag, rootPageId, NOTION_API_KEY) {
                     },
                 }
             );
-            progress += `${ANSIEscapeCode.green}■`;
+            progress += `${ANSIEscapeCode.green}▤▤`;
         } catch (err) {
-            progress += `${ANSIEscapeCode.red}■`;
+            progress += `${ANSIEscapeCode.red}▤▤`;
             logError(err);
         }
         postCount++;
         process.stdout.write(ANSIEscapeCode.cover);
-        console.log(`${ANSIEscapeCode.reset}[ ${postCount} / ${fileCount} ] ${progress}`);
-        console.log(ANSIEscapeCode.reset);
+        console.log(`[ ${postCount} / ${fileCount} ] ${progress} ${ANSIEscapeCode.reset}`);
     }
     console.log(ANSIEscapeCode.reset);
 }
@@ -153,7 +155,7 @@ async function postRootPage(tag, NOTION_API_KEY, NOTION_PAGE_ID) {
 
 /* 모든 태그 post */
 async function postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID) {
-    console.log("== START ALL TAGS DOCS POSTING ==");
+    console.log(`\n${ANSIEscapeCode.blue}== START ALL TAGS DOCS POSTING ==${ANSIEscapeCode.reset}`);
 
     const tags = getTags(tempPath);
     console.log("[ Header ]");
@@ -162,7 +164,7 @@ async function postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID) {
     for (const tag of tags) {
         await postRootPage(tag, NOTION_API_KEY, NOTION_PAGE_ID);
     }
-    console.log("== END POST ALL TAGS DOCS POSTING ==");
+    console.log(`${ANSIEscapeCode.blue}== END POST ALL TAGS DOCS POSTING ==${ANSIEscapeCode.reset}`);
 
     fs.rm(tempPath, { recursive: true });
 }

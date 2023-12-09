@@ -8,6 +8,22 @@ const readdir = util.promisify(fs.readdir);
 
 const tempPath = path.join(__dirname, "../temp");
 
+const ANSIEscapeCode = {
+    cover: "\x1b[A",
+    reset: "\x1b[0m",
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    blue: "\x1b[34m",
+    white: "\x1b[37m",
+    bgRed: "\x1b[41m",
+    bgGreen: "\x1b[42m",
+};
+
+const progress = {
+    gauge: 0,
+    full: 0,
+};
+
 /* 태그 컨텐츠 추출 */
 function extractTitle(line) {
     const matches = line.match(/<h1 id=".*?">(.*?)<\/h1>/);
@@ -16,9 +32,12 @@ function extractTitle(line) {
 
 /* 내부 참조 제거 */
 async function removeInnerRef() {
-    console.log("== START REMOVE INNER REF ==");
+    console.log(`\n${ANSIEscapeCode.blue}== START REMOVE INNER REF ==${ANSIEscapeCode.reset}`);
+    console.log();
     try {
         const files = await readdir(tempPath);
+        progress.gauge = 0;
+        progress.full = files.length;
 
         const writeOperations = files.map(async (file) => {
             if (path.extname(file) === ".md") {
@@ -34,23 +53,28 @@ async function removeInnerRef() {
                 // 결과를 같은 이름의 파일로 저장
                 const newFilePath = path.join(tempPath, `${file}`);
                 await writeFile(newFilePath, updatedMarkdown, "utf8");
-                console.log(`참조 제거 : ${file}`);
+                progress.gauge += 1;
+                process.stdout.write(`${ANSIEscapeCode.cover}`);
+                console.log(`제거 진행도 [ ${Math.round(progress.gauge / progress.full * 100)} % ] ${ANSIEscapeCode.green}${"▤▤".repeat(Math.floor(progress.gauge / progress.full * 10))}${ANSIEscapeCode.reset}`)
             }
         });
 
         // 모든 파일 저장 대기
         await Promise.all(writeOperations);
-        console.log("== END REMOVE INNER REF ==");
+        console.log(`${ANSIEscapeCode.blue}== END REMOVE INNER REF ==${ANSIEscapeCode.reset}`);
     } catch (err) {
-        console.error("err occurred -> ", err);
+        fs.appendFile(path.join(__dirname, "../log/trace.error"), `err occurred -> -> ${err}`);
     }
 }
 
 /* 헤딩 스타일 변경 */
 async function changeHeading() {
-    console.log("== START CHANGE HEADING ==");
+    console.log(`\n${ANSIEscapeCode.blue}== START CHANGE HEADING ==${ANSIEscapeCode.reset}`);
+    console.log();
     try {
         const files = await readdir(tempPath);
+        progress.gauge = 0;
+        progress.full = files.filter(file => file.match(/^.+?-1\.md$/)).length;
 
         const writeOperations = files.map(async (file) => {
             // tag-1.md 파일만
@@ -69,15 +93,17 @@ async function changeHeading() {
 
                 const newFilePath = path.join(tempPath, file);
                 await writeFile(newFilePath, updatedMarkdown, "utf8");
-                console.log(`헤딩 변경 : ${file}`);
+                progress.gauge += 1;
+                process.stdout.write(`${ANSIEscapeCode.cover}`);
+                console.log(`변환 진행도 [ ${Math.round(progress.gauge / progress.full * 100)} % ] ${ANSIEscapeCode.green}${"▤▤".repeat(Math.floor(progress.gauge / progress.full * 10))}${ANSIEscapeCode.reset}`)
             }
         });
 
         // 모든 파일 저장 대기
         await Promise.all(writeOperations);
-        console.log("== END CHANGE HEADING ==");
+        console.log(`${ANSIEscapeCode.blue}== END CHANGE HEADING ==${ANSIEscapeCode.reset}`);
     } catch (err) {
-        console.error("err occurred -> ", err);
+        fs.appendFile(path.join(__dirname, "../log/trace.error"), `err occurred -> -> ${err}`);
     }
 }
 
