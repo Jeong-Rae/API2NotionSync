@@ -49,7 +49,7 @@ your server code
 */
 
 // append command
-run();
+api2notionsync.run();
 ```
 ### 환경변수 .env 등록 사항
 
