@@ -11,6 +11,7 @@
 - [How to Use in JS Projects](#using-in-project)
 	- [server.js](#serverjs)
 	- [Setting .env Environment Variables](#setting-.env-environment-variables)
+	- [Setting Environment Variables in Terminal](#setting-environment-variables-in-terminal)
 
 ## CLI Global
 
@@ -63,7 +64,24 @@ The `.env` file should contain information related to the API key for Notion, an
 ``` properties
 //.env file
 
-NOTION_API_KEY=secret_example
-NOTION_PAGE_ID=example
-SERVER_HOST=https://www.example.com
+NOTION_API_KEY="secret_example"
+NOTION_PAGE_ID="example"
+SERVER_HOST="https://www.example.com"
+```
+
+### Setting Environment Variables in Terminal
+For testing purposes without a `.env` file, you can directly set the environment variables in the `terminal` as follows:
+
+#### Linux, macOS
+```shell
+export NOTION_API_KEY="secret_example"
+export NOTION_PAGE_ID="example"
+export SERVER_HOST="https://www.example.com"
+```
+
+#### Windows
+```shell
+$env:NOTION_API_KEY="secret_example"
+$env:NOTION_PAGE_ID="example"
+$env:SERVER_HOST="https://www.example.com"
 ```
