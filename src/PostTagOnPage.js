@@ -166,11 +166,11 @@ async function postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID) {
     }
     console.log(`${ANSIEscapeCode.blue}== END POST ALL TAGS DOCS POSTING ==${ANSIEscapeCode.reset}`);
 
-    try{
-        await fs.rm(tempPath, { recursive: true });
-    } catch (err) { 
-        console.error(err);
-    }
+    fs.rm(tempPath, { recursive: true }, (err) => {
+        if (err) {
+            console.error("Error occurred while removing directory ->", err);
+        }
+    });
 }
 
 module.exports = postTagOnPage;
