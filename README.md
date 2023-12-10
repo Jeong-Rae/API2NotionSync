@@ -10,7 +10,7 @@
 	- [Options](#options)
 - [How to Use in JS Projects](#using-in-project)
 	- [server.js](#serverjs)
-	- [Setting .env Environment Variables](#setting-.env-environment-variables)
+	- [Setting .env Environment Variables](#setting-env-environment-variables)
 	- [Setting Environment Variables in Terminal](#setting-environment-variables-in-terminal)
 
 ## CLI Global
@@ -80,7 +80,7 @@ export SERVER_HOST="https://www.example.com"
 ```
 
 #### Windows
-```shell
+```powershell
 $env:NOTION_API_KEY="secret_example"
 $env:NOTION_PAGE_ID="example"
 $env:SERVER_HOST="https://www.example.com"
