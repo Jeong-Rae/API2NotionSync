@@ -3,9 +3,12 @@ const path = require("path");
 
 const yamlFile = path.join(__dirname, "../resource", "api-docs.yaml");
 const markdownFile = path.join(__dirname, "../temp", "docs.md");
+
+const widdershinsPath = require.resolve("widdershins");
+
 const command = [
     "node",
-    path.join(__dirname, "../node_modules/widdershins/widdershins.js"),
+    path.join(path.dirname(path.dirname(widdershinsPath)), "widdershins.js"),
     yamlFile,
     "-o",
     markdownFile,
@@ -33,11 +36,16 @@ const progress = {
 
 function convertYamlToMd() {
     try {
-        console.log(`\n${ANSIEscapeCode.blue}== START CONVERT api-docs.yaml TO docs.md ==${ANSIEscapeCode.reset}`);
+        console.log(
+            `\n${ANSIEscapeCode.blue}== START CONVERT api-docs.yaml TO docs.md ==${ANSIEscapeCode.reset}`
+        );
 
+        console.log(command);
         execSync(command);
 
-        console.log(`${ANSIEscapeCode.blue}== END CONVERT api-docs.yaml TO docs.md ==${ANSIEscapeCode.reset}`);
+        console.log(
+            `${ANSIEscapeCode.blue}== END CONVERT api-docs.yaml TO docs.md ==${ANSIEscapeCode.reset}`
+        );
     } catch (err) {
         console.error("err occurred -> ", err);
     }

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-const path = require('path');
+const path = require("path");
 const run = require(path.join(__dirname, "Run"));
 
-var argv = { // 입력인자
+var argv = {
+    // 입력인자
     run: false,
-    libVersion: [false, "api2notionsync v0.1.3"],
+    libVersion: [false, "api2notionsync v0.1.13"],
     help: false,
     markdown: false,
     oasVersion: 3,
@@ -14,28 +15,44 @@ var argv = { // 입력인자
 
 /* 실행 함수 호출 */
 function runAPI2NotionSync(argv) {
-    run.run({ isMarkdownOnly: argv.markdown, pathInput : argv.input });
+    run.run({ isMarkdownOnly: argv.markdown, pathInput: argv.input });
 }
 
 /* 도움말 출력 */
 function help() {
     console.log("api2notionsync [options] [[-i] input .yaml] <command>\n");
     console.log("usage commands: ");
-    console.log(helpTemplate("[ --run | -r ]", "Posts the API document to Notion", 16));
-    console.log(helpTemplate("[ --help | -h ]", "Prints the help document", 16));
     console.log(
-        helpTemplate("[ --version | -v ]", "Prints the library version", 16)
-        );
-    console.log("\nusage options: ");
-    console.log(
-        helpTemplate("[ --markdown | -m ] [Boolean]", "Obtains only the docs.md file as a result", 32)
+        helpTemplate("[ --run | -r ]", "Posts the API document to Notion", 16)
     );
     console.log(
-        helpTemplate("[ --input | -i ] [FilePath]", "Sets the absolute path of the yaml", 32)
-        );
-        console.log(
-            helpTemplate("[ --oas_version | -s ] [number]", "Sets the version of OAS", 32)
-            );
+        helpTemplate("[ --help | -h ]", "Prints the help document", 16)
+    );
+    console.log(
+        helpTemplate("[ --version | -v ]", "Prints the library version", 16)
+    );
+    console.log("\nusage options: ");
+    console.log(
+        helpTemplate(
+            "[ --markdown | -m ] [Boolean]",
+            "Obtains only the docs.md file as a result",
+            32
+        )
+    );
+    console.log(
+        helpTemplate(
+            "[ --input | -i ] [FilePath]",
+            "Sets the absolute path of the yaml",
+            32
+        )
+    );
+    console.log(
+        helpTemplate(
+            "[ --oas_version | -s ] [number]",
+            "Sets the version of OAS",
+            32
+        )
+    );
 }
 
 // 도움말 출력 템플릿
@@ -48,10 +65,10 @@ function parseArguments(args) {
     for (let i = 0; i < args.length; i++) {
         switch (args[i]) {
             case "--run":
-                case "-r":
+            case "-r":
                 argv.run = true;
                 break;
-                case "--version":
+            case "--version":
             case "-v":
                 argv.libVersion[0] = true;
                 break;
@@ -113,7 +130,7 @@ function checkValid(argv) {
             "--help",
             "--host",
             "--NOTION_API_KEY",
-            "--NOTION_PAGE_ID"
+            "--NOTION_PAGE_ID",
         ];
 
         console.log("Invalid Arguments: " + argv.unknown.join(", "));

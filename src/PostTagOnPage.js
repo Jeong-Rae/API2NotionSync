@@ -166,7 +166,11 @@ async function postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID) {
     }
     console.log(`${ANSIEscapeCode.blue}== END POST ALL TAGS DOCS POSTING ==${ANSIEscapeCode.reset}`);
 
-    fs.rm(tempPath, { recursive: true });
+    try{
+        await fs.rm(tempPath, { recursive: true });
+    } catch (err) { 
+        console.error(err);
+    }
 }
 
 module.exports = postTagOnPage;
