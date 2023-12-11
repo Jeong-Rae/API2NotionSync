@@ -1,6 +1,6 @@
 # API2NotionSync
 
-## Automatic Posting to Notion via API
+## Automatic Posting API docs to Notion
 
 ## Table of Contents
 
@@ -40,6 +40,9 @@ api2notionsync --run --host "https://www.example.com" --NOTION_API_KEY {your_API
 | -i, --input | `string` | `.\resource` | If you have a .YAML API document formatted to OAS v3, enter its absolute path. If entered correctly, the file from your local path will be used. |
 
 ## Using in Projects
+
+### To Install
+- `npm install api2notionsync`
 
 ### server.js
 ```js
