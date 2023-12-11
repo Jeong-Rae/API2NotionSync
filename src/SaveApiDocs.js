@@ -34,7 +34,12 @@ async function saveApiDocs(SERVER_HOST, pathInput) {
         }
         return;
     }
-    const url = SERVER_HOST + "/v3/api-docs.yaml";
+    
+    const urls = [
+        SERVER_HOST + "/v3/api-docs.yaml",
+        SERVER_HOST + "/v2/api-docs.yaml",
+        SERVER_HOST + "/api-docs.yaml",
+    ];
 
     try {
         const dirPath = path.dirname(filePath);
@@ -49,8 +54,10 @@ async function saveApiDocs(SERVER_HOST, pathInput) {
         let response;
         for (let t = 0; t < 10; t++) {
             try {
-                response = await axios.get(url, { responseType: "arraybuffer" });
-                break;
+                for (const url of urls){
+                    response = await axios.get(url, { responseType: "arraybuffer" });
+                    break;
+                }
             } catch (err) {
                 if (t==0){
                     console.log();
