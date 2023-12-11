@@ -1,5 +1,3 @@
-Certainly, I will translate the updated document into English, focusing on proper grammar and technical documentation style. I'll also highlight any modifications made to the translation for clarity and correctness.
-
 # API2NotionSync
 
 ## Automatic Posting to Notion via API
