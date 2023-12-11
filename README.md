@@ -1,3 +1,5 @@
+Certainly, I will translate the updated document into English, focusing on proper grammar and technical documentation style. I'll also highlight any modifications made to the translation for clarity and correctness.
+
 # API2NotionSync
 
 ## Automatic Posting to Notion via API
@@ -12,12 +14,15 @@
 	- [server.js](#serverjs)
 	- [Setting .env Environment Variables](#setting-env-environment-variables)
 	- [Setting Environment Variables in Terminal](#setting-environment-variables-in-terminal)
+- [Anticipated Issues]()
+	- [Save Api Docs Stage - Waiting for Axios](#saveapidocs-stage---waiting-for-axios)
+	- [All Tag Docs Posting Stage - Failure to Post](#all-tag-docs-posting---failure-to-post)
 
 ## CLI Global
 
 ### To Install
 - Clone the repository and run `npm install`
-- Then, `npm install -g api2notionsync`
+- or, install globally with `npm install -g api2notionsync`
 
 ### Example
 ```
@@ -27,14 +32,14 @@ api2notionsync --run --host "https://www.example.com" --NOTION_API_KEY {your_API
 ### Options
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
-| -r, --run | NONE | NONE | Starts posting API documentation to Notion. |
-| -v, --version | NONE | NONE | Displays the version of the library. |
-| -h, --help | NONE | NONE | Displays help for library options. |
-| --host | `string` | NONE | Set the host of the server where `swagger` or `OpenApi v3` documentation is applied. This value is set as an environment variable, and can be registered with `EXPORT SERVER_HOST=?`. Fetches the file from `/v3/api-docs.yaml`. | 
-| --NOTION_API_KEY | `string` | NONE | Enter the NOTION API KEY issued by the Notion API. This value is set as an environment variable, and can be registered with `EXPORT NOTION_API_KEY=?`. |
-| --NOTION_PAGE_ID | `string` | NONE | Enter the NOTION PAGE ID issued by the Notion API. This value is set as an environment variable, and can be registered with `EXPORT NOTION_PAGE_ID=?`. |
-| -m, --markdown | `boolean` | `false` | An option to use if you want to obtain the document converted to markdown without posting to Notion. The document will be saved in the `temp` directory of this library as `docs.md`. |
-| -i, --input | `string` | `.\resource` | If you already have an OAS v3 formatted .YAML API document, enter the absolute path of that file. If entered correctly, you can use the file located at your local path. |
+| -r, --run | NONE | NONE | Initiates posting of API documentation to Notion. |
+| -v, --version | NONE | NONE | Displays the library's version. |
+| -h, --help | NONE | NONE | Provides help regarding library options. |
+| --host | `string` | NONE | Sets the host of the server with `swagger` or `OpenApi v3` documentation. This is set as an environment variable and can be registered using `EXPORT SERVER_HOST=?`. Retrieves the file from `/v3/api-docs.yaml`. | 
+| --NOTION_API_KEY | `string` | NONE | Enter your NOTION API KEY obtained from the Notion API. Set it as an environment variable, registerable via `EXPORT NOTION_API_KEY=?`. |
+| --NOTION_PAGE_ID | `string` | NONE | Enter your NOTION PAGE ID obtained from the Notion API. Set it as an environment variable, registerable via `EXPORT NOTION_PAGE_ID=?`. |
+| -m, --markdown | `boolean` | `false` | Use this option to convert the document to markdown without posting to Notion. Saved as `docs.md` in the library's `temp` directory. |
+| -i, --input | `string` | `.\resource` | If you have a .YAML API document formatted to OAS v3, enter its absolute path. If entered correctly, the file from your local path will be used. |
 
 ## Using in Projects
 
@@ -43,34 +48,40 @@ api2notionsync --run --host "https://www.example.com" --NOTION_API_KEY {your_API
 // server.js
 const api2notionsync = require('api2notionsync');
 
-/* 
-...
-your server code
-...
-*/
+/* your swagger setting */
 
-// append command
+// Check if the following swagger-jsdoc settings are present
+const swaggerYaml = yaml.dump(swaggerSpec);
+app.get('/v3/api-docs.yaml', (req, res) => {
+    res.setHeader('Content-Type', 'application/yaml');
+    res.send(swaggerYaml);
+});
+
+/* your server code */
+
+// append this command
 api2notionsync.run();
 ```
-You can selectively determine the arguments to be passed when called in the following way.
+> You can optionally specify the arguments to pass when calling the method.
 ```js
 api2notionsync.run({ isMarkdownOnly: true, pathInput: "./your/path" });
 
 api2notionsync.run({ pathInput: "./your/path" });
 ```
+
 ### Setting .env Environment Variables
 
-The `.env` file should contain information related to the API key for Notion, and the server host where the API documentation is located. You can read the `.env` file using the `dotenv` library.
+> Ensure your `.env` file contains API key information for Notion and the server host for API documentation. Read the `.env` file using the `dotenv` library.
 ``` properties
 //.env file
 
-NOTION_API_KEY="secret_example"
-NOTION_PAGE_ID="example"
-SERVER_HOST="https://www.example.com"
+NOTION_API_KEY=secret_example
+NOTION_PAGE_ID=example
+SERVER_HOST=https://www.example.com
 ```
 
 ### Setting Environment Variables in Terminal
-For testing purposes without a `.env` file, you can directly set the environment variables in the `terminal` as follows:
+> Without a `.env` file, you can directly set environment variables in the terminal as follows:
 
 #### Linux, macOS
 ```shell
@@ -79,9 +90,51 @@ export NOTION_PAGE_ID="example"
 export SERVER_HOST="https://www.example.com"
 ```
 
-#### Windows
+#### Windows (PowerShell)
 ```powershell
 $env:NOTION_API_KEY="secret_example"
 $env:NOTION_PAGE_ID="example"
 $env:SERVER_HOST="https://www.example.com"
 ```
+
+## Anticipated Issues
+
+### SaveApiDocs Stage - Waiting for Axios
+
+#### Issue
+Occurrence of `저장 대기 n회`
+> Our library searches for a file named `api-docs.yaml` at `SERVER_HOST/v3/api-docs.yaml`.  
+> If unable to find this path, it sends requests up to 10 times every 5 seconds
+
+. 
+> Continuous occurrence of `저장 대기 n회` indicates a need to check the `v3/api-docs.yaml` path.
+
+#### Solution
+- `Java`: The yaml path is automatically set. Issues have been identified with v2, and a fix is planned.
+- `Node`: You must manually specify the path using `swagger-jsdoc`. If you have set up swagger using `swagger-ui-express`, it's a straightforward process. Insert the following code in a suitable location within your JS project.
+```js
+const swaggerJsdoc = require('swagger-jsdoc');
+const yaml = require('js-yaml');
+
+const swaggerYaml = yaml.dump(swaggerSpec);
+
+// An example app.use code for comparison.
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.get('/v3/api-docs.yaml', (req, res) => {
+    res.setHeader('Content-Type', 'application/yaml');
+    res.send(swaggerYaml);
+});
+```
+
+### All Tag Docs Posting - Failure to Post
+
+#### Issue
+Occurrence of a `red gauge` during All Tag Docs Posting
+> Checking node_modules/log/trace.error is the best approach.   
+> Typically, failure to post a specific item stems from Notion Api specifications, often occurring when the converted Md is excessively large.
+> If failures persist for all postings, check the status of the Notion page and network.
+
+#### Solution
+- Continuous failure for all postings: Check the status of the Notion page and network.
+- Failure of individual postings: Separate the API requests. A fix is planned for this issue.
