@@ -103,8 +103,6 @@ $env:SERVER_HOST="https://www.example.com"
 Occurrence of `저장 대기 n회`
 > Our library searches for a file named `api-docs.yaml` at `SERVER_HOST/v3/api-docs.yaml`.  
 > If unable to find this path, it sends requests up to 10 times every 5 seconds
-
-. 
 > Continuous occurrence of `저장 대기 n회` indicates a need to check the `v3/api-docs.yaml` path.
 
 #### Solution
