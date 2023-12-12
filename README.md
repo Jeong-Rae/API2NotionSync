@@ -2,6 +2,10 @@
 
 ## Automatic Posting API docs to Notion
 
+## Known Issues
+- *~~Permission Error Issue~~* / Resolved on 2023-12-12
+- *~~Environment Variable Application Error~~* / Resolved on 2023-12-12
+
 ## Table of Contents
 
 - [How to Use in CLI](#cli-global)

@@ -14,13 +14,11 @@ const mdToNotionForDir = require(path
 const postTagOnPage = require(path
     .join(__dirname, "src", "PostTagOnPage"));
 
-const NOTION_API_KEY = process.env.NOTION_API_KEY; // 노션 API 키
-const NOTION_PAGE_ID = process.env.NOTION_PAGE_ID; // 부모 페이지 ID
-const SERVER_HOST = process.env.SERVER_HOST; // 연동할 서버 주소
-
-
-async function run({ isMarkdownOnly = false, pathInput = "" } = {}) {
-    await saveApiDocs(SERVER_HOST, pathInput);
+async function run({ isMarkdownOnly = false, pathInput = "", env ={} } = {}) {
+    console.log(env.SERVER_HOST);
+    console.log(env.NOTION_API_KEY);
+    console.log(env.NOTION_PAGE_ID);
+    await saveApiDocs(env.SERVER_HOST, pathInput);
     await convertYamlToMd();
     if (isMarkdownOnly) {
         return;
@@ -29,7 +27,7 @@ async function run({ isMarkdownOnly = false, pathInput = "" } = {}) {
     await parseMarkdownByTag();
     await updateMarkdownStyles();
     await mdToNotionForDir();
-    await postTagOnPage(NOTION_API_KEY, NOTION_PAGE_ID);
+    await postTagOnPage(env.NOTION_API_KEY, env.NOTION_PAGE_ID);
 }
 
 module.exports = {

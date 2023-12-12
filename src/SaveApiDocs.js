@@ -56,7 +56,9 @@ async function saveApiDocs(SERVER_HOST, pathInput) {
             try {
                 for (const url of urls){
                     response = await axios.get(url, { responseType: "arraybuffer" });
-                    break;
+                    if (response){
+                        break;
+                    }
                 }
             } catch (err) {
                 if (t==0){

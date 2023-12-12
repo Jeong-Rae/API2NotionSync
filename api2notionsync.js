@@ -5,7 +5,7 @@ const run = require(path.join(__dirname, "Run"));
 var argv = {
     // 입력인자
     run: false,
-    libVersion: [false, "api2notionsync v1.0.1"],
+    libVersion: [false, "api2notionsync v1.0.7"],
     help: false,
     markdown: false,
     oasVersion: 3,
@@ -15,7 +15,16 @@ var argv = {
 
 /* 실행 함수 호출 */
 function runAPI2NotionSync(argv) {
-    run.run({ isMarkdownOnly: argv.markdown, pathInput: argv.input });
+    const env = {
+        "NOTION_API_KEY" : "",
+        "NOTION_PAGE_ID" : "",
+        "SERVER_HOST" : "",
+    };
+    env.NOTION_API_KEY = process.env.NOTION_API_KEY; // 노션 API 키
+    env.NOTION_PAGE_ID = process.env.NOTION_PAGE_ID; // 부모 페이지 ID
+    env.SERVER_HOST = process.env.SERVER_HOST; // 연동할 서버 주소
+
+    run.run({ isMarkdownOnly: argv.markdown, pathInput: argv.input, env: env });
 }
 
 /* 도움말 출력 */
@@ -144,7 +153,7 @@ function checkValid(argv) {
                     (arg.length - editDistance(arg, mostSimilar)) / arg.length >
                     0.6
                 ) {
-                    console.log(`The most similar command  '"${mostSimilar}"'`);
+                    console.log(`The most similar command  '${mostSimilar}'`);
                 }
             }
         });
