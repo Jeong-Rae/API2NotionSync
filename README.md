@@ -1,8 +1,6 @@
-Certainly, I will translate the updated document into English, focusing on proper grammar and technical documentation style. I'll also highlight any modifications made to the translation for clarity and correctness.
-
 # API2NotionSync
 
-## Automatic Posting to Notion via API
+## Automatic Posting API docs to Notion
 
 ## Table of Contents
 
@@ -42,6 +40,9 @@ api2notionsync --run --host "https://www.example.com" --NOTION_API_KEY {your_API
 | -i, --input | `string` | `.\resource` | If you have a .YAML API document formatted to OAS v3, enter its absolute path. If entered correctly, the file from your local path will be used. |
 
 ## Using in Projects
+
+### To Install
+- `npm install api2notionsync`
 
 ### server.js
 ```js
@@ -99,17 +100,15 @@ $env:SERVER_HOST="https://www.example.com"
 
 ## Anticipated Issues
 
-### SaveApiDocs Stage - Waiting for Axios
+### 1. SaveApiDocs Stage - Waiting for Axios
 
-#### Issue
+### Issue
 Occurrence of `저장 대기 n회`
 > Our library searches for a file named `api-docs.yaml` at `SERVER_HOST/v3/api-docs.yaml`.  
 > If unable to find this path, it sends requests up to 10 times every 5 seconds
-
-. 
 > Continuous occurrence of `저장 대기 n회` indicates a need to check the `v3/api-docs.yaml` path.
 
-#### Solution
+### Solution
 - `Java`: The yaml path is automatically set. Issues have been identified with v2, and a fix is planned.
 - `Node`: You must manually specify the path using `swagger-jsdoc`. If you have set up swagger using `swagger-ui-express`, it's a straightforward process. Insert the following code in a suitable location within your JS project.
 ```js
@@ -127,14 +126,14 @@ app.get('/v3/api-docs.yaml', (req, res) => {
 });
 ```
 
-### All Tag Docs Posting - Failure to Post
+### 2. All Tag Docs Posting - Failure to Post
 
-#### Issue
+### Issue
 Occurrence of a `red gauge` during All Tag Docs Posting
 > Checking node_modules/log/trace.error is the best approach.   
 > Typically, failure to post a specific item stems from Notion Api specifications, often occurring when the converted Md is excessively large.
 > If failures persist for all postings, check the status of the Notion page and network.
 
-#### Solution
+### Solution
 - Continuous failure for all postings: Check the status of the Notion page and network.
 - Failure of individual postings: Separate the API requests. A fix is planned for this issue.
