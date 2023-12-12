@@ -5,7 +5,7 @@ const run = require(path.join(__dirname, "Run"));
 var argv = {
     // 입력인자
     run: false,
-    libVersion: [false, "api2notionsync v0.1.13"],
+    libVersion: [false, "api2notionsync v1.0.1"],
     help: false,
     markdown: false,
     oasVersion: 3,

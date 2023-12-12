@@ -6,7 +6,7 @@
     },
     "name": "api2notionsync",
     "description": "Automatically synchronizes the `api-docs` in OpenAPI format or swagger to `Notion`",
-    "version": "0.1.14",
+    "version": "1.0.1",
     "main": "./Run.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
@@ -35,5 +35,11 @@
     "bugs": {
         "url": "https://github.com/Jeong-Rae/API2NotionSync/issues"
     },
-    "homepage": "https://github.com/Jeong-Rae/API2NotionSync#readme"
+    "homepage": "https://github.com/Jeong-Rae/API2NotionSync#readme",
+    "keywords": [
+        "Swagger",
+        "OpenApi",
+        "ApiDocs",
+        "Notion"
+    ]
 }
