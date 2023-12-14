@@ -16,9 +16,9 @@ var argv = {
 /* 실행 함수 호출 */
 function runAPI2NotionSync(argv) {
     const env = {
-        "NOTION_API_KEY" : "",
-        "NOTION_PAGE_ID" : "",
-        "SERVER_HOST" : "",
+        NOTION_API_KEY: "",
+        NOTION_PAGE_ID: "",
+        SERVER_HOST: "",
     };
     env.NOTION_API_KEY = process.env.NOTION_API_KEY; // 노션 API 키
     env.NOTION_PAGE_ID = process.env.NOTION_PAGE_ID; // 부모 페이지 ID
@@ -161,7 +161,7 @@ function checkValid(argv) {
         process.exit(1);
     }
 
-    if (!argv.run && (argv.markdown !== false || argv.input !== "./resource")) {
+    if (!argv.run && (argv.markdown !== false || argv.input !== "")) {
         console.log(
             'Do you want to run? then include "--run" or "-r" in the command'
         );

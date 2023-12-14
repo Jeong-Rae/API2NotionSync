@@ -1,8 +1,5 @@
 test\
 test
-temp\
-temp
 .env
-trace.error
 node_modules
 .vscode
